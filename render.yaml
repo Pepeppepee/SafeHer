@@ -1,0 +1,41 @@
+# Render Blueprint — defines the whole deployment in the repo instead of in dashboard
+# clicks. In Render: New > Blueprint, point it at this repo, and it creates both the
+# web service and the database with the wiring below already done.
+#
+# Free tier caveats, both deliberate:
+#   - the service sleeps after ~15 minutes idle; the next visit waits ~30-60s to wake
+#   - free Postgres is removed by Render after roughly a month, so treat data as
+#     disposable until you move the database to a paid plan
+services:
+  - type: web
+    name: safeher
+    runtime: python
+    plan: free
+    # Closest region to Kathmandu, so requests aren't crossing an ocean twice.
+    region: singapore
+    buildCommand: "sh build.sh"
+    startCommand: "gunicorn safeher.wsgi:application -c gunicorn.conf.py"
+    healthCheckPath: /healthz
+    envVars:
+      - key: DJANGO_SECRET_KEY
+        # Render generates a strong value once and keeps it across deploys, so the
+        # secret never has to live in this repo.
+        generateValue: true
+      - key: DATABASE_URL
+        fromDatabase:
+          name: safeher-db
+          property: connectionString
+      - key: DJANGO_DEBUG
+        value: "0"
+      # One worker, four threads — see gunicorn.conf.py for why.
+      - key: WEB_CONCURRENCY
+        value: "1"
+      - key: PYTHON_VERSION
+        value: "3.13"
+
+databases:
+  - name: safeher-db
+    databaseName: safeher
+    user: safeher
+    plan: free
+    region: singapore

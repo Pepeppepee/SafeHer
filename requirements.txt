@@ -1,3 +1,10 @@
-django>=5.0
+django>=6.1,<6.2
 djangorestframework>=3.14
 django-cors-headers>=4.0
+
+# Production serving
+gunicorn>=23.0          # WSGI server; memory tuning lives in gunicorn.conf.py
+whitenoise>=6.9         # serves /static/ from the app process (Render free has no CDN)
+psycopg[binary]>=3.2    # Postgres driver; Render's filesystem can't keep a SQLite file
+dj-database-url>=2.1    # turns Render's DATABASE_URL into Django's DATABASES dict
+python-dotenv>=1.0      # lets local `manage.py` runs read .env

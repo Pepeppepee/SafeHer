@@ -8,12 +8,16 @@
 python -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
+cp .env.example .env          # settings read the environment; see the file for what to fill in
 python manage.py migrate
+python manage.py seed_valley_places
 python manage.py createsuperuser
 python manage.py runserver
 ```
 
 Admin panel: http://localhost:8000/admin/
+
+Deploying to Render: see [DEPLOY.md](DEPLOY.md).
 
 ## Project structure
 

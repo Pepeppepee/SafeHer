@@ -1,8 +1,11 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-// Points at the same Django backend the web app uses, over the ngrok tunnel —
-// one backend serves both. Update this if the tunnel URL ever changes.
-export const API_BASE = "https://silvicolous-elianna-unintendedly.ngrok-free.dev";
+// Points at the same Django backend the web app uses — one backend serves both.
+// Set EXPO_PUBLIC_API_BASE (in mobile/.env or the build environment) to switch
+// between the deployed server and a local tunnel without editing code. Expo inlines
+// EXPO_PUBLIC_* variables at build time, so this is a constant in the shipped bundle.
+export const API_BASE =
+  process.env.EXPO_PUBLIC_API_BASE || "https://silvicolous-elianna-unintendedly.ngrok-free.dev";
 
 const TOKEN_KEY = "safeher_token";
 // AsyncStorage (not SecureStore) so this works identically on iOS, Android, and web —
