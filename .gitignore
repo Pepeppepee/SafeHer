@@ -1,0 +1,19 @@
+# Python
+__pycache__/
+*.pyc
+venv/
+
+# Django
+db.sqlite3
+staticfiles/
+
+# Secrets / local env
+.env
+*.local
+
+# Logs from dev/testing sessions
+*.log
+
+# Node / Expo (mobile/ has its own too, but this covers the root just in case)
+node_modules/
+.expo/

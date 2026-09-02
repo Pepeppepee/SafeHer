@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>SafeHer</title>
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#F0728A">
+<link rel="apple-touch-icon" href="/static/icons/apple-touch-icon.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="SafeHer">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@600;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --a:#F0728A;--ad:#C94F63;--al:#FFE9EE;         /* rose — primary / CTAs */
+  --sage:#6FA37F;--sage-d:#3F6B4E;--sage-l:#E9F5EC; /* sage — safety / trust */
+  --lav:#8B7FC7;--lav-d:#5B4F94;--lav-l:#EFEBFA;    /* lavender — accents */
+  --peach:#E8935B;--peach-d:#A85E2E;--peach-l:#FDECDD;
+  --t:#2E2233;--ts:#6E6275;--tm:#A79CAE;
+  --b:#F2E4E9;--c:#fff;--bg:#FFF8F5;
+  --shadow:0 6px 20px rgba(201,79,99,.08);
+}
+body{font-family:'Nunito',system-ui,sans-serif;background:var(--bg);max-width:430px;margin:0 auto;min-height:100vh;color:var(--t)}
+.screen{display:none;padding:20px 16px 32px;animation:fadeIn .25s ease}
+.screen.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+h1{font-family:'Quicksand',sans-serif;font-size:23px;font-weight:700;color:var(--t);margin-bottom:8px}
+.sub{font-size:14px;color:var(--ts);margin-bottom:24px;line-height:1.6}
+.btn{width:100%;padding:14px;border-radius:999px;border:none;background:linear-gradient(135deg,var(--a),#F0567A);color:#fff;font-size:15px;font-weight:700;cursor:pointer;font-family:'Nunito',sans-serif;box-shadow:0 6px 16px rgba(240,114,138,.35);transition:transform .12s}
+.btn:active{transform:scale(.97)}
+.btn-o{background:transparent;border:1.5px solid var(--b);color:var(--t);box-shadow:none;font-weight:700}
+.btn-s{background:var(--al);color:var(--ad);border:none;box-shadow:none}
+.btn:disabled{opacity:.35;box-shadow:none}
+.br{display:flex;gap:8px}.br>div{flex:1}
+input,textarea{width:100%;padding:14px 16px;border-radius:14px;border:1.5px solid var(--b);font-size:15px;background:var(--c);outline:none;font-family:inherit;box-sizing:border-box}
+input:focus,textarea:focus{border-color:var(--a)}
+.mg{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px}
+.mc{padding:18px 14px;border-radius:18px;border:1.5px solid transparent;background:var(--c);cursor:pointer;transition:all .15s;box-shadow:var(--shadow)}
+.mc.peace{background:var(--lav-l)}.mc.energy{background:var(--peach-l)}.mc.wonder{background:var(--sage-l)}.mc.reset{background:#E5F2F6}
+.mc.s{border-color:var(--a);box-shadow:0 0 0 3px var(--al)}
+.mc .e{font-size:26px}.mc .n{font-family:'Quicksand',sans-serif;font-size:15px;font-weight:700;margin:8px 0 2px}.mc .d{font-size:11.5px;color:var(--ts)}
+.ch{display:inline-block;padding:9px 16px;border-radius:999px;border:1.5px solid var(--b);background:var(--c);cursor:pointer;font-size:13px;margin:0 6px 8px 0;transition:all .15s;font-weight:600}
+.ch.s{border-color:var(--a);background:var(--al);color:var(--ad)}
+.op{padding:14px 16px;border-radius:14px;border:1.5px solid var(--b);background:var(--c);cursor:pointer;margin-bottom:10px;font-size:14px;font-weight:600;transition:all .15s}
+.op.s{border-color:var(--a);background:var(--al);color:var(--ad)}
+.tag{display:inline-flex;align-items:center;gap:4px;padding:5px 12px;border-radius:999px;font-size:12px;font-weight:700;background:var(--al);color:var(--ad);margin-right:6px;margin-bottom:6px}
+.tag-lav{background:var(--lav-l);color:var(--lav-d)}
+.tag-peach{background:var(--peach-l);color:var(--peach-d)}
+.tag-sage{background:var(--sage-l);color:var(--sage-d)}
+.card{background:var(--c);border-radius:22px;overflow:hidden;box-shadow:var(--shadow)}
+.ch2{height:130px;background:linear-gradient(135deg,var(--lav),var(--a) 55%,var(--peach));position:relative;display:flex;align-items:flex-end;padding:18px}
+.ch2::after{content:'';position:absolute;inset:0;background:radial-gradient(circle at 85% 15%,rgba(255,255,255,.35),transparent 45%)}
+.ch2 h2{font-family:'Quicksand',sans-serif;font-size:19px;font-weight:700;color:#fff;text-shadow:0 1px 4px rgba(0,0,0,.2);position:relative}
+.ch2 p{font-size:13px;color:rgba(255,255,255,.95);position:relative}
+.cb{padding:18px}
+.sec-lbl{font-family:'Quicksand',sans-serif;font-size:13px;font-weight:700;color:var(--ts);margin:2px 0 10px;display:flex;align-items:center;gap:6px}
+.ichk{display:flex;align-items:flex-start;gap:10px;background:var(--lav-l);border-radius:12px;padding:10px 12px;margin-bottom:8px;font-size:13px;line-height:1.5;color:var(--lav-d)}
+.ichk .ico{font-size:14px;flex-shrink:0}
+.sstat{display:inline-flex;align-items:center;gap:6px;background:var(--sage-l);color:var(--sage-d);font-weight:700;font-size:13px;padding:8px 14px;border-radius:999px;margin-bottom:12px}
+.sacc{border-radius:14px;background:var(--sage-l);margin-bottom:8px;overflow:hidden}
+.sacc summary{list-style:none;cursor:pointer;padding:12px 14px;display:flex;align-items:center;gap:10px;font-weight:700;color:var(--sage-d);font-size:13.5px}
+.sacc summary::-webkit-details-marker{display:none}
+.sacc .sicon{width:26px;height:26px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0}
+.sacc .chev{margin-left:auto;transition:transform .2s;color:var(--sage-d);opacity:.6}
+.sacc[open] .chev{transform:rotate(90deg)}
+.sacc .sbody{padding:0 14px 14px 50px;font-size:13px;line-height:1.6;color:var(--sage-d)}
+.sacc .sbody .tb{display:block;margin-top:6px;font-weight:700}
+.rb{background:var(--peach-l);border-radius:14px;padding:12px 14px;margin-bottom:10px}
+.rb .q{font-size:13px;color:var(--peach-d);font-style:italic;margin-bottom:4px;line-height:1.5}
+.rb .at{font-size:11px;color:var(--peach-d);opacity:.75;font-weight:600}
+.sr{display:flex;gap:8px;justify-content:center;margin:16px 0}
+.sb2{width:48px;height:48px;border-radius:50%;border:2px solid var(--b);background:var(--c);font-size:18px;cursor:pointer;font-weight:700;color:var(--ts);font-family:inherit}
+.sb2.s{border-color:var(--a);background:var(--al);color:var(--ad)}
+.lb{font-size:13px;color:var(--ts);margin-bottom:8px;font-weight:600}
+.mt16{margin-top:16px}.mt20{margin-top:20px}.ctr{text-align:center}.p40{padding-top:40px}.p60{padding-top:60px}
+.err{background:#FEE8E7;color:#9B2C2C;padding:12px;border-radius:12px;font-size:13px;margin-top:16px;display:none}
+.brand{font-family:'Quicksand',sans-serif;font-weight:700;background:linear-gradient(135deg,var(--ad),var(--lav-d));-webkit-background-clip:text;background-clip:text;color:transparent}
+.blob{width:84px;height:84px;border-radius:40% 60% 55% 45%/50% 45% 55% 50%;background:linear-gradient(135deg,var(--al),var(--lav-l));display:flex;align-items:center;justify-content:center;margin:0 auto 14px;font-size:34px}
+
+/* nav + game-y touches */
+.navrow{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:2px}
+.iconbtn{width:42px;height:42px;border-radius:50%;background:var(--c);box-shadow:var(--shadow);border:none;font-size:18px;cursor:pointer;flex-shrink:0;position:relative}
+.iconbtn .dot{position:absolute;top:2px;right:2px;width:9px;height:9px;border-radius:50%;background:var(--a);border:2px solid var(--bg);display:none}
+.iconbtn.has .dot{display:block}
+.badge{display:inline-flex;align-items:center;gap:6px;background:linear-gradient(135deg,var(--lav-l),var(--al));color:var(--lav-d);font-weight:700;font-size:12.5px;padding:7px 14px;border-radius:999px;margin-bottom:16px}
+.dots{display:flex;gap:6px;margin:10px 0 18px}
+.dots span{width:26px;height:6px;border-radius:999px;background:var(--b);transition:all .2s}
+.dots span.on{background:var(--a);width:34px}
+.mc.pop{animation:pop .35s ease}
+@keyframes pop{0%{transform:scale(1)}40%{transform:scale(1.06)}100%{transform:scale(1)}}
+.surprise{display:block;margin:0 auto 18px;background:var(--peach-l);color:var(--peach-d);border:none;border-radius:999px;padding:9px 18px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit}
+.tlist{background:var(--c);border-radius:16px;padding:14px;margin-bottom:10px;box-shadow:var(--shadow);cursor:pointer}
+.tlist .tn{font-family:'Quicksand',sans-serif;font-weight:700;font-size:14.5px;margin-bottom:2px}
+.tlist .ta{font-size:12px;color:var(--tm);margin-bottom:6px}
+.tlist .tm{font-size:12.5px;color:var(--ts);background:var(--bg);border-radius:8px;padding:6px 8px}
+.tlist .tc{display:inline-block;font-size:11px;color:var(--sage-d);background:var(--sage-l);padding:3px 8px;border-radius:999px;margin-top:6px}
+.chatwrap{display:flex;flex-direction:column;height:calc(100vh - 140px)}
+.chatlog{flex:1;overflow-y:auto;padding:4px 2px 12px}
+.bub{max-width:78%;padding:10px 13px;border-radius:16px;font-size:13.5px;line-height:1.5;margin-bottom:8px;background:var(--c);box-shadow:var(--shadow)}
+.bub.me{background:linear-gradient(135deg,var(--a),#F0567A);color:#fff;margin-left:auto;border-bottom-right-radius:4px}
+.bub:not(.me){border-bottom-left-radius:4px}
+.bub .sn{font-size:10.5px;font-weight:700;opacity:.7;display:block;margin-bottom:2px}
+.chatinput{display:flex;gap:8px;padding-top:10px}
+.chatinput input{flex:1}
+.chatinput button{width:48px;height:48px;border-radius:50%;border:none;background:linear-gradient(135deg,var(--a),#F0567A);color:#fff;font-size:16px;cursor:pointer;flex-shrink:0}
+.report-link{display:block;text-align:center;font-size:12px;color:var(--tm);margin-top:10px;cursor:pointer;text-decoration:underline}
+.empty{text-align:center;padding:60px 20px;color:var(--tm)}
+
+/* personality themes — recolor the primary accent only; sage/lavender/peach stay fixed semantic colors */
+body[data-theme="energy"]{--a:#F0784A;--ad:#B8451A;--al:#FFE7D9}
+body[data-theme="wonder"]{--a:#2FA093;--ad:#1C6A60;--al:#DCF3EF}
+body[data-theme="reset"]{--a:#4F97D9;--ad:#2A6493;--al:#E1F0FB}
+body[data-theme="cozy"]{--a:#D89638;--ad:#8B6914;--al:#FBEEDA}
+
+.blob{animation:float 3.2s ease-in-out infinite;cursor:pointer;position:relative}
+@keyframes float{0%,100%{transform:translateY(0) rotate(0deg)}50%{transform:translateY(-7px) rotate(-4deg)}}
+.blob.tapped{animation:petpop .5s ease}
+@keyframes petpop{0%{transform:scale(1) rotate(0)}30%{transform:scale(1.3) rotate(10deg)}60%{transform:scale(.92) rotate(-8deg)}100%{transform:scale(1) rotate(0)}}
+.affirm{font-size:12.5px;color:var(--lav-d);font-weight:700;min-height:18px;margin-top:2px;transition:opacity .4s ease;opacity:1}
+.affirm.fade{opacity:0}
+.welcomeback{display:inline-flex;align-items:center;gap:6px;background:var(--al);color:var(--ad);font-weight:700;font-size:12.5px;padding:7px 14px;border-radius:999px;margin:0 0 14px}
+.petal{position:fixed;top:-20px;font-size:18px;pointer-events:none;animation:fall linear forwards;z-index:5}
+@keyframes fall{to{transform:translateY(110vh) rotate(360deg);opacity:0}}
+.spark{position:absolute;font-size:16px;pointer-events:none;animation:sparkout .7s ease-out forwards}
+@keyframes sparkout{0%{transform:translate(0,0) scale(.6);opacity:1}100%{transform:translate(var(--dx),var(--dy)) scale(1.1);opacity:0}}
+
+</style>
+</head>
+<body>
+
+<div class="screen active" id="loginScreen">
+<div class="p40 ctr" id="loginTop">
+<div class="blob" id="loginBlob" onclick="petBlob()">🌸</div>
+<div id="wbBadge"></div>
+<h1><span class="brand">SafeHer</span></h1>
+<p class="sub" id="loginGreeting">Tell me your mood, I'll find your place —<br>safely, as a woman, in the valley.</p>
+<p class="affirm" id="affirmTicker"></p>
+</div>
+<input type="tel" id="loginPhone" placeholder="Your phone number" style="margin-bottom:12px">
+<button class="btn" onclick="doLogin()">Enter</button>
+<p style="font-size:13px;color:var(--ts);text-align:center;margin-top:18px">New here? <span style="color:var(--ad);font-weight:700;cursor:pointer;text-decoration:underline" onclick="show('joinScreen')">Join with an invite code</span></p>
+<div id="loginError" class="err"></div>
+</div>
+
+<div class="screen" id="joinScreen">
+<div class="p40 ctr">
+<div class="blob">💌</div>
+<h1>You've been invited</h1>
+<p class="sub">A friend shared her invite code with you. This app is invite-only, by design — it keeps the community small and trusted.</p>
+</div>
+<input type="text" id="joinCode" placeholder="Invite code" maxlength="8" style="margin-bottom:12px;text-transform:uppercase">
+<input type="tel" id="joinPhone" placeholder="Your phone number" style="margin-bottom:12px">
+<input type="text" id="joinName" placeholder="Your first name" style="margin-bottom:12px">
+<button class="btn" onclick="doJoin()">Create my account</button>
+<p style="font-size:13px;color:var(--ts);text-align:center;margin-top:16px;cursor:pointer;text-decoration:underline" onclick="show('loginScreen')">← Back to login</p>
+<div id="joinError" class="err"></div>
+</div>
+
+<div class="screen" id="setupScreen">
+<h1>Quick setup</h1>
+<p class="sub">Two questions so we match you right.</p>
+<p class="lb">How experienced are you solo?</p>
+<div id="cOpts">
+<div class="op" data-v="first_timer" onclick="pC(this)">Never been out alone</div>
+<div class="op" data-v="cautious" onclick="pC(this)">I have, but I'm careful</div>
+<div class="op" data-v="confident" onclick="pC(this)">I go solo all the time</div>
+</div>
+<p class="lb mt16">What makes you uneasy? (up to 3)</p>
+<div id="aChips">
+<span class="ch" onclick="tA(this)">Empty streets</span>
+<span class="ch" onclick="tA(this)">Men staring</span>
+<span class="ch" onclick="tA(this)">No signal</span>
+<span class="ch" onclick="tA(this)">Hard to get back</span>
+<span class="ch" onclick="tA(this)">Being alone</span>
+</div>
+<button class="btn mt20" id="sBtn" disabled onclick="doSetup()">Done — show me places</button>
+</div>
+
+<div class="screen" id="moodScreen">
+<div class="navrow">
+<div>
+<h1 id="mG">How do you want to feel today?</h1>
+<p class="lb" id="mT" style="margin-bottom:0"></p>
+</div>
+<button class="iconbtn" id="buddyNavBtn" onclick="openThreads()" title="My buddies">👭<span class="dot"></span></button>
+</div>
+<div id="mBadge"></div>
+<div class="dots" id="mDots"><span id="d1"></span><span id="d2"></span><span id="d3"></span></div>
+<div class="mg">
+<div class="mc peace" onclick="pM(this,'peace')"><span class="e">🌅</span><p class="n">Peace</p><p class="d">stillness, sunsets, breathe</p></div>
+<div class="mc energy" onclick="pM(this,'energy')"><span class="e">⚡</span><p class="n">Energy</p><p class="d">concerts, crowds, buzz</p></div>
+<div class="mc wonder" onclick="pM(this,'wonder')"><span class="e">✨</span><p class="n">Wonder</p><p class="d">new streets, hidden gems</p></div>
+<div class="mc reset" onclick="pM(this,'reset')"><span class="e">🍃</span><p class="n">Reset</p><p class="d">river, silence, nothing</p></div>
+</div>
+<button class="surprise" onclick="surprise()">🎲 Surprise me</button>
+<p class="lb">I'd rather be</p>
+<div style="margin-bottom:16px">
+<span class="ch" onclick="pCr(this,'quiet')">Somewhere quiet</span>
+<span class="ch" onclick="pCr(this,'social')">Around people</span>
+</div>
+<p class="lb">How far?</p>
+<div style="margin-bottom:24px">
+<span class="ch" onclick="pD(this,'walkable')">Walkable</span>
+<span class="ch" onclick="pD(this,'under_1hr')">Under 1hr</span>
+<span class="ch" onclick="pD(this,'day_trip')">Day trip</span>
+</div>
+<button class="btn" id="fBtn" disabled onclick="show('sceneScreen')">Find my place</button>
+</div>
+
+<div class="screen" id="sceneScreen">
+<h1>What kind of place?</h1>
+<p class="sub">So we don't just show you the same famous few every time.</p>
+<div class="op" onclick="doFind('mainstream')">
+  <div style="font-weight:700;margin-bottom:2px">🏛️ Mainstream landmark</div>
+  <div style="font-size:12.5px;color:var(--ts);font-weight:400">The well-known spots — Durbar Squares, Boudhanath, Swayambhu</div>
+</div>
+<div class="op" onclick="doFind('hidden_gem')">
+  <div style="font-weight:700;margin-bottom:2px">💎 Hidden gem</div>
+  <div style="font-size:12.5px;color:var(--ts);font-weight:400">Off the circuit — quiet temples, forests, viewpoints almost no one visits</div>
+</div>
+<div class="op" onclick="doFind('cafe_social')">
+  <div style="font-weight:700;margin-bottom:2px">☕ Café &amp; social</div>
+  <div style="font-size:12.5px;color:var(--ts);font-weight:400">Rooftop cafés, live music, a good strip to hang out on</div>
+</div>
+<p style="font-size:13px;color:var(--ts);text-align:center;margin-top:16px;cursor:pointer;text-decoration:underline" onclick="show('moodScreen')">← Back</p>
+</div>
+
+<div class="screen" id="loadScreen"><div style="text-align:center;padding:80px 20px;color:var(--ts)"><div class="blob" style="animation:fadeIn 1s ease infinite alternate">🔍</div><p style="font-weight:600">Finding your perfect place...</p></div></div>
+
+<div class="screen" id="matchScreen">
+<p style="font-size:12px;color:var(--tm);letter-spacing:.5px;text-transform:uppercase;margin-bottom:12px">Your match</p>
+<div class="card">
+<div class="ch2"><div><h2 id="mN"></h2><p id="mA"></p><p id="mSc" style="font-size:11.5px;font-weight:700;margin-top:2px"></p></div></div>
+<div class="cb">
+<div id="mTags" style="margin-bottom:14px"></div>
+<div id="mInfo"></div>
+<div class="sec-lbl">🛡️ Safety info — tap to open</div>
+<div id="mSafe"></div>
+<div id="mRevs"></div>
+<div class="br"><div><button class="btn" onclick="doR('going')">I'm going</button></div><div><button class="btn btn-o" onclick="show('decScreen')">Not this time</button></div></div>
+</div></div>
+</div>
+
+<div class="screen" id="decScreen">
+<h1 style="font-size:20px">What didn't fit?</h1>
+<p class="sub">Helps us get it right.</p>
+<div class="op" onclick="doD(this,'wrong_mood')">Wrong mood</div>
+<div class="op" onclick="doD(this,'too_far')">Too far</div>
+<div class="op" onclick="doD(this,'not_safe')">Doesn't feel safe</div>
+<div class="op" onclick="doD(this,'been_there')">Already been</div>
+<div class="op" onclick="doD(this,'bad_timing')">Bad timing</div>
+</div>
+
+<div class="screen" id="buddyScreen">
+<div id="ba1" class="p40 ctr">
+<div class="blob">👯</div>
+<h1>Want company for this one?</h1>
+<p class="sub">We'll blind-match you with another woman heading to the same place, same day. No profiles, no photos — just a private chat until the trip's done.</p>
+<button class="btn" onclick="buddyWant(true)">Yes, find me a buddy</button>
+<button class="btn btn-o mt16" onclick="buddyWant(false)">No, I'm good solo</button>
+</div>
+<div id="ba2" class="p40 ctr" style="display:none">
+<div class="blob" id="baIcon">👯</div>
+<h1 id="baTitle"></h1>
+<p class="sub" id="baSub"></p>
+<button class="btn" id="baChatBtn" style="display:none" onclick="openThread(cThreadId)">Say hi 👋</button>
+<button class="btn btn-o mt16" onclick="show('goScreen')">Continue</button>
+</div>
+</div>
+
+<div class="screen" id="goScreen">
+<div class="p40 ctr">
+<div class="blob" onclick="petBlob(this.id)" id="goBlob">🎉</div>
+<h1>Have a beautiful time!</h1>
+<p class="sub">We'll check in after your visit.</p>
+<button class="btn" onclick="showMood()">Find another place</button>
+<button class="btn btn-o mt16" onclick="showCI()">Check in on a past trip</button>
+</div>
+</div>
+
+<div class="screen" id="ciScreen">
+<div class="p40">
+<h1 style="font-size:20px" id="ciT">Did you make it?</h1>
+<div class="br mt20" id="ci1"><div><button class="btn" onclick="ciYes()">Yes, I went!</button></div><div><button class="btn btn-o" onclick="showMood()">Not yet</button></div></div>
+<div id="ci2" style="display:none">
+<p class="lb mt16">Did it match the mood you wanted?</p>
+<div class="sr" id="msR"></div>
+<p class="lb mt16">How safe did you feel?</p>
+<div class="sr" id="ssR"></div>
+<textarea id="ciN" rows="3" placeholder="Anything other women should know? (optional)" style="margin-top:16px"></textarea>
+<div style="margin-top:8px"><label style="font-size:13px;color:var(--ts);cursor:pointer"><input type="checkbox" id="shR"> Share anonymously with other women</label></div>
+<button class="btn mt20" id="ciBtn" disabled onclick="doCI()">Submit</button>
+</div></div>
+</div>
+
+<div class="screen" id="thxScreen">
+<div class="p60 ctr">
+<div class="blob" onclick="petBlob(this.id)" id="thxBlob">💛</div>
+<h1>Thank you!</h1>
+<p class="sub">Your experience helps other women.</p>
+<p style="font-size:13px;color:var(--tm);margin-bottom:32px" id="thxL"></p>
+<button class="btn" onclick="showMood()">Find another place</button>
+</div>
+</div>
+
+<div class="screen" id="threadsScreen">
+<div class="navrow" style="margin-bottom:16px">
+<h1 style="margin-bottom:0">My buddies 👭</h1>
+<button class="iconbtn" onclick="showMood()">✕</button>
+</div>
+<div id="tList"></div>
+</div>
+
+<div class="screen" id="chatScreen">
+<div class="navrow" style="margin-bottom:10px">
+<div>
+<h1 id="chN" style="font-size:18px;margin-bottom:0"></h1>
+<p class="lb" id="chSub" style="margin-bottom:0"></p>
+</div>
+<button class="iconbtn" onclick="closeChat()">✕</button>
+</div>
+<div class="chatwrap">
+<div class="chatlog" id="chatLog"></div>
+<div class="chatinput">
+<input type="text" id="chatInput" placeholder="Say something kind..." maxlength="500" onkeydown="if(event.key==='Enter')sendMsg()">
+<button onclick="sendMsg()">➤</button>
+</div>
+</div>
+<p class="report-link" onclick="showReportMembers()">🚩 Report someone in this chat</p>
+</div>
+
+<div class="screen" id="reportScreen">
+<div id="rp1">
+<h1 style="font-size:20px">Who's this about?</h1>
+<p class="sub">Your report is private. It takes two reports to act.</p>
+<div id="rpMembers"></div>
+<button class="btn btn-o" onclick="cancelReport()">Cancel</button>
+</div>
+<div id="rp2" style="display:none">
+<h1 style="font-size:20px">What happened?</h1>
+<p class="sub">Helps us keep this space safe.</p>
+<div class="op" onclick="submitReport('harassment')">Harassment</div>
+<div class="op" onclick="submitReport('inappropriate')">Inappropriate behavior</div>
+<div class="op" onclick="submitReport('not_woman')">Might not be a woman</div>
+<div class="op" onclick="submitReport('spam')">Spam</div>
+<div class="op" onclick="submitReport('other')">Other</div>
+</div>
+</div>
+
+<script>
+let cU=null,cMo=null,cCr=null,cDi=null,cCo=null,cAn=[],cMa=null,cQI=null,cRI=null,ciM=null,ciS=null,cSc=null;
+let cProfile=null,cThreadId=null,cThreadMembers=[],cReportTarget=null,chatPollId=null,affirmId=null;
+function todayISO(){let d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
+
+/* ---- delight: greeting, affirmations, theme, blob ---- */
+const AFFIRMATIONS=["You deserve to feel safe and free 🌸","Every woman deserves her own sunset 🌅","Small adventures count too 💛","The valley is kinder than the news says 🌿","You don't need a reason to go somewhere pretty ✨","Solo doesn't mean alone — we've got you 👭"];
+const BLOB_EMOJI=['🌸','🌼','🌺','🌷','🌻'];
+let blobIdx=0;
+function timeGreeting(){let h=new Date().getHours();if(h<5)return'Still up? 🌙';if(h<12)return'Good morning ☀️';if(h<17)return'Good afternoon 🌤️';if(h<20)return'Good evening 🌆';return'Good night 🌙'}
+function startAffirmations(){let el=document.getElementById('affirmTicker');let i=0;el.textContent=AFFIRMATIONS[0];
+clearInterval(affirmId);affirmId=setInterval(()=>{el.classList.add('fade');setTimeout(()=>{i=(i+1)%AFFIRMATIONS.length;el.textContent=AFFIRMATIONS[i];el.classList.remove('fade')},400)},3800)}
+function petBlob(id){id=id||'loginBlob';let b=document.getElementById(id);blobIdx=(blobIdx+1)%BLOB_EMOJI.length;b.textContent=BLOB_EMOJI[blobIdx];b.classList.remove('tapped');void b.offsetWidth;b.classList.add('tapped')}
+function petalShower(count){count=count||14;let icons=['🌸','🌼','🌺','🌷','✨'];
+for(let i=0;i<count;i++){setTimeout(()=>{let p=document.createElement('span');p.className='petal';p.textContent=icons[Math.floor(Math.random()*icons.length)];
+p.style.left=(Math.random()*100)+'%';p.style.animationDuration=(2.2+Math.random()*1.6)+'s';p.style.fontSize=(14+Math.random()*10)+'px';
+document.body.appendChild(p);setTimeout(()=>p.remove(),4000)},i*90)}}
+function burst(el){let r=el.getBoundingClientRect();let icons=['✨','💛','🌸','💫'];
+for(let i=0;i<10;i++){let s=document.createElement('span');s.className='spark';s.textContent=icons[i%icons.length];
+s.style.left=(r.left+r.width/2)+'px';s.style.top=(r.top+r.height/2)+'px';
+let ang=Math.random()*2*Math.PI,dist=40+Math.random()*50;
+s.style.setProperty('--dx',(Math.cos(ang)*dist)+'px');s.style.setProperty('--dy',(Math.sin(ang)*dist)+'px');
+document.body.appendChild(s);setTimeout(()=>s.remove(),750)}}
+function sleep(ms){return new Promise(r=>setTimeout(r,ms))}
+
+function computeTopCategory(profile){let scores=profile.interest_scores||{};let keys=Object.keys(scores);
+if(!keys.length)return localStorage.getItem('sh_theme')||'peace';
+return keys.reduce((a,b)=>scores[a]>=scores[b]?a:b)}
+function applyTheme(cat){document.body.dataset.theme=cat;localStorage.setItem('sh_theme',cat)}
+
+function initLogin(){
+let savedTheme=localStorage.getItem('sh_theme');if(savedTheme)applyTheme(savedTheme);
+let name=localStorage.getItem('sh_name'),phone=localStorage.getItem('sh_phone'),trips=localStorage.getItem('sh_trips'),label=localStorage.getItem('sh_label');
+if(phone)document.getElementById('loginPhone').value=phone;
+document.getElementById('loginGreeting').innerHTML=name
+  ? timeGreeting()+', <b>'+name+'</b> 👋<br>Ready for another one?'
+  : timeGreeting()+'.<br>Tell me your mood, I\'ll find your place —<br>safely, as a woman, in the valley.';
+document.getElementById('wbBadge').innerHTML=(name&&trips&&Number(trips)>0)
+  ? '<span class="welcomeback">🏅 '+(label||'Explorer')+' · '+trips+' trip'+(trips==='1'?'':'s')+' so far</span>' : '';
+startAffirmations()}
+function gC(n){let v=document.cookie.match('(^|;)\\s*'+n+'\\s*=\\s*([^;]+)');return v?v.pop():'';}
+async function api(u,d){let o={method:d?'POST':'GET',headers:{'Content-Type':'application/json','X-CSRFToken':gC('csrftoken')},credentials:'same-origin'};if(d)o.body=JSON.stringify(d);let r=await fetch(u,o);return{ok:r.ok,data:await r.json()}}
+function show(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');window.scrollTo(0,0)}
+
+async function doLogin(){
+let p=document.getElementById('loginPhone').value.trim();if(!p)return;
+let r=await api('/api/accounts/login/',{phone:p});
+if(r.ok){cU=r.data;document.getElementById('mG').textContent='Hey '+r.data.first_name+', how do you want to feel today?';
+localStorage.setItem('sh_name',r.data.first_name);localStorage.setItem('sh_phone',p);
+clearInterval(affirmId);burst(document.getElementById('loginBlob'));await sleep(500);
+if(r.data.has_profile){await loadProfile();showMood()}else show('setupScreen')}
+else{let e=document.getElementById('loginError');e.style.display='block';e.textContent=r.data.error||'Login failed'}}
+
+async function doJoin(){
+let code=document.getElementById('joinCode').value.trim();
+let phone=document.getElementById('joinPhone').value.trim();
+let name=document.getElementById('joinName').value.trim();
+let errEl=document.getElementById('joinError');errEl.style.display='none';
+if(!code||!phone||!name){errEl.style.display='block';errEl.textContent='Fill in all three to continue.';return}
+let r=await api('/api/accounts/signup/',{invite_code:code,phone:phone,first_name:name});
+if(r.ok){cU=r.data;document.getElementById('mG').textContent='Hey '+r.data.first_name+', how do you want to feel today?';
+localStorage.setItem('sh_name',r.data.first_name);localStorage.setItem('sh_phone',phone);
+clearInterval(affirmId);burst(document.getElementById('joinCode').closest('.screen').querySelector('.blob'));await sleep(500);
+show('setupScreen')}
+else{errEl.style.display='block';errEl.textContent=r.data.error||r.data.invite_code||r.data.phone||r.data.first_name||'Could not create account'}}
+
+function pC(el){document.querySelectorAll('#cOpts .op').forEach(o=>o.classList.remove('s'));el.classList.add('s');cCo=el.dataset.v;document.getElementById('sBtn').disabled=false}
+function tA(el){if(el.classList.contains('s')){el.classList.remove('s');cAn=cAn.filter(a=>a!==el.textContent)}else if(cAn.length<3){el.classList.add('s');cAn.push(el.textContent)}}
+async function doSetup(){let r=await api('/api/accounts/profile/setup/',{comfort_tier:cCo,anxiety_points:cAn,interest_scores:{peace:.5,energy:.5,wonder:.5,reset:.5}});if(r.ok){await loadProfile();showMood()}}
+
+async function loadProfile(){let r=await api('/api/accounts/profile/');if(r.ok){cProfile=r.data;
+applyTheme(computeTopCategory(cProfile));
+localStorage.setItem('sh_trips',cProfile.trips_completed);localStorage.setItem('sh_label',cProfile.personality_label||'Explorer')}}
+function renderBadge(){let b=document.getElementById('mBadge');if(!cProfile){b.innerHTML='';return}
+b.innerHTML='<span class="badge">🏅 '+(cProfile.personality_label||'Explorer')+' · '+cProfile.trips_completed+' trip'+(cProfile.trips_completed===1?'':'s')+'</span>'}
+
+async function refreshBuddyDot(){let r=await api('/api/buddies/threads/');let btn=document.getElementById('buddyNavBtn');
+if(r.ok&&r.data.length){btn.classList.add('has')}else{btn.classList.remove('has')}}
+
+function showMood(){cMo=cCr=cDi=cSc=null;document.querySelectorAll('.mc,.ch').forEach(e=>e.classList.remove('s'));document.getElementById('fBtn').disabled=true;
+let d=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'],n=new Date();
+document.getElementById('mT').textContent=d[n.getDay()]+' '+n.toLocaleTimeString('en',{hour:'numeric',minute:'2-digit'});
+renderBadge();updateDots();refreshBuddyDot();show('moodScreen')}
+function updateDots(){[['d1',cMo],['d2',cCr],['d3',cDi]].forEach(([id,v])=>document.getElementById(id).classList.toggle('on',!!v))}
+function pM(el,v){document.querySelectorAll('.mc').forEach(c=>c.classList.remove('s','pop'));el.classList.add('s','pop');cMo=v;ckM()}
+function pCr(el,v){el.parentElement.querySelectorAll('.ch').forEach(c=>c.classList.remove('s'));el.classList.add('s');cCr=v;ckM()}
+function pD(el,v){el.parentElement.querySelectorAll('.ch').forEach(c=>c.classList.remove('s'));el.classList.add('s');cDi=v;ckM()}
+function ckM(){updateDots();document.getElementById('fBtn').disabled=!(cMo&&cCr&&cDi)}
+function surprise(){let cards=[...document.querySelectorAll('.mc')];let pick=cards[Math.floor(Math.random()*cards.length)];pick.click()}
+
+async function doFind(scenePref){show('loadScreen');let r=await api('/api/moods/find/',{mood:cMo,crowd_preference:cCr,distance:cDi,scene_preference:scenePref||cSc});
+if(r.ok&&r.data.match){cSc=scenePref||cSc;cMa=r.data.match;cQI=r.data.query.id;rM(r.data);show('matchScreen');setTimeout(()=>petalShower(10),200)}
+else{show('sceneScreen');alert(r.data.message||'No matches found for that combo. Try a different kind of place.')}}
+
+const VIBE_META={peaceful:['🌅','lav'],energetic:['⚡','peach'],romantic:['💕','a'],contemplative:['🌙','lav'],social:['👯','peach'],adventurous:['🧗','sage'],cozy:['☕','peach']};
+const SAFE_META={transport:['🚕','Getting there'],accommodation:['🏡','Where to stay'],area_safety:['🌙','After dark'],connectivity:['📶','Signal'],local_attitude:['💬','Local vibe'],emergency:['🚨','Emergency'],return_route:['🔁','Getting back']};
+
+const SCENE_META={mainstream:'🏛️ Mainstream landmark',hidden_gem:'💎 Hidden gem',cafe_social:'☕ Café & social'};
+function rM(d){let m=d.match;document.getElementById('mN').textContent=m.name;document.getElementById('mA').textContent=m.area;
+document.getElementById('mSc').textContent=SCENE_META[m.scene_type]||'';
+document.getElementById('mTags').innerHTML=(m.vibe_tags||[]).map(t=>{let v=VIBE_META[t]||['✨','a'];let cls=v[1]==='a'?'tag':'tag tag-'+v[1];return '<span class="'+cls+'">'+v[0]+' '+t+'</span>'}).join('');
+
+let i='';if(m.vibe_windows&&m.vibe_windows.length){let w=m.vibe_windows[0];i+='<div class="ichk"><span class="ico">👥</span>'+w.crowd_level+' crowd on '+w.day_type+'s</div>';if(w.vibe_notes)i+='<div class="ichk"><span class="ico">✨</span>'+w.vibe_notes+'</div>'}
+if(m.match_reasons&&m.match_reasons.length)i+=m.match_reasons.map(r=>'<div class="ichk"><span class="ico">✓</span>'+r+'</div>').join('');
+document.getElementById('mInfo').innerHTML=i||'<div class="ichk"><span class="ico">💛</span>Great match for your mood.</div>';
+
+let s='';
+if(m.total_visitors>0)s+='<div class="sstat">💛 '+m.safety_percentage+'% felt safe · 👭 '+m.total_visitors+' women visited</div>';
+else s+='<div class="sstat">🌱 Be the first to check in here</div>';
+const SAFE_ORDER=['transport','area_safety','local_attitude','connectivity','return_route','accommodation','emergency'];
+let intel=(m.safety_intel||[]).slice().sort((a,b)=>SAFE_ORDER.indexOf(a.category)-SAFE_ORDER.indexOf(b.category));
+if(intel.length)intel.forEach((x,idx)=>{let meta=SAFE_META[x.category]||['ℹ️',x.category];
+s+='<details class="sacc"'+(idx===0?' open':'')+'><summary><span class="sicon">'+meta[0]+'</span>'+meta[1]+'<span class="chev">›</span></summary>'+
+   '<div class="sbody">'+x.content+(x.transport_back?'<span class="tb">🚗 '+x.transport_back+'</span>':'')+'</div></details>'});
+document.getElementById('mSafe').innerHTML=s;
+
+let rv='';if(d.reviews&&d.reviews.length)d.reviews.forEach(r=>{rv+='<div class="rb"><p class="q">💬 "'+r+'"</p><p class="at">— a woman who visited recently</p></div>'});
+document.getElementById('mRevs').innerHTML=rv}
+
+async function doR(dec,reason){let r=await api('/api/moods/respond/',{experience_id:cMa.id,mood_query_id:cQI,decision:dec,decline_reason:reason||''});
+if(r.ok){cRI=r.data.id;if(dec==='going'){document.getElementById('ba1').style.display='block';document.getElementById('ba2').style.display='none';show('buddyScreen');setTimeout(()=>petalShower(16),150)}
+else{
+  // She already said what was wrong with THIS place — that's not a reason to make her
+  // re-pick mood/crowd/distance/scene from scratch. The declined place is already
+  // excluded (day-locked server-side), so just search again with the same preferences
+  // and hand her the next option immediately.
+  doFind();
+}}}
+function doD(el,reason){document.querySelectorAll('#decScreen .op').forEach(o=>o.classList.remove('s'));el.classList.add('s');setTimeout(()=>doR('declined',reason),300)}
+
+function showCI(){if(cRI){document.getElementById('ciT').textContent='Did you make it to '+cMa.name+'?';document.getElementById('ci1').style.display='flex';document.getElementById('ci2').style.display='none';ciM=ciS=null;show('ciScreen')}}
+function ciYes(){document.getElementById('ci1').style.display='none';document.getElementById('ci2').style.display='block';
+['msR','ssR'].forEach(id=>{let c=document.getElementById(id);c.innerHTML='';[1,2,3,4,5].forEach(n=>{let b=document.createElement('button');b.className='sb2';b.textContent=n;
+b.onclick=()=>{c.querySelectorAll('.sb2').forEach(x=>x.classList.remove('s'));b.classList.add('s');if(id==='msR')ciM=n;else ciS=n;document.getElementById('ciBtn').disabled=!(ciM&&ciS)};c.appendChild(b)})})}
+async function doCI(){let r=await api('/api/moods/checkin/'+cRI+'/',{visited:true,visit_mood_match:ciM,visit_safety_score:ciS,visit_note:document.getElementById('ciN').value,share_review:document.getElementById('shR').checked,would_recommend:ciM>=4});
+if(r.ok){document.getElementById('thxL').textContent=r.data.personality_label||'';show('thxScreen');ciM=ciS=null}}
+
+/* ---- buddies & chat ---- */
+async function buddyWant(want){let r=await api('/api/buddies/intent/',{experience_id:cMa.id,intended_date:todayISO(),wants_buddy:want});
+document.getElementById('ba1').style.display='none';document.getElementById('ba2').style.display='block';
+let icon=document.getElementById('baIcon'),title=document.getElementById('baTitle'),sub=document.getElementById('baSub'),chatBtn=document.getElementById('baChatBtn');
+chatBtn.style.display='none';
+if(!r.ok){icon.textContent='😕';title.textContent="Couldn't set that up";sub.textContent=r.data.error||'Try again from your next match.';return}
+if(!want){icon.textContent='🧘';title.textContent='Solo it is';sub.textContent="You've got this. We'll still be right here if you need anything.";return}
+if(r.data.matched&&r.data.thread){cThreadId=r.data.thread.id;icon.textContent='🎉';title.textContent="You're matched!";
+sub.textContent='Another woman is heading to '+cMa.name+' too. Say hi — the chat closes 48 hours after your trip.';chatBtn.style.display='block'}
+else{icon.textContent='⏳';title.textContent="You're on the list";sub.textContent="No one else has opted in for this spot yet — we'll match you the moment someone does. Check My Buddies later.";}
+}
+
+async function openThreads(){let r=await api('/api/buddies/threads/');if(!r.ok)return;
+let list=document.getElementById('tList');
+if(!r.data.length){list.innerHTML='<div class="empty">👭<br><br>No active buddy chats yet.<br>Say yes to a buddy match after your next "I\'m going" to start one.</div>'}
+else{list.innerHTML=r.data.map(t=>{let lm=t.last_message?('<div class="tm">'+t.last_message.sender_name+': "'+t.last_message.content+'"</div>'):'<div class="tm">Say hi to break the ice 👋</div>';
+return '<div class="tlist" onclick="openThread(\''+t.id+'\')"><div class="tn">'+t.experience_name+'</div><div class="ta">'+t.experience_area+' · '+t.trip_date+'</div>'+lm+'<span class="tc">'+t.member_count+' women in this chat</span></div>'}).join('')}
+show('threadsScreen')}
+
+async function openThread(id){if(!id)return;cThreadId=id;clearInterval(chatPollId);await loadThread();show('chatScreen');chatPollId=setInterval(loadThread,4000)}
+async function loadThread(){let r=await api('/api/buddies/threads/'+cThreadId+'/');if(!r.ok)return;renderChat(r.data)}
+function renderChat(d){cThreadMembers=d.members;
+document.getElementById('chN').textContent=d.experience_name;
+document.getElementById('chSub').textContent=d.members.length+' women · trip on '+d.trip_date;
+let log=document.getElementById('chatLog');let wasBottom=log.scrollTop+log.clientHeight>=log.scrollHeight-40;
+log.innerHTML=d.messages.length?d.messages.map(m=>'<div class="bub'+(m.is_me?' me':'')+'">'+(m.is_me?'':'<span class="sn">'+m.sender_name+'</span>')+m.content+'</div>').join('')
+  :'<div class="empty">This chat is just getting started.<br>Say hi 👋</div>';
+if(wasBottom||!log.dataset.seen){log.scrollTop=log.scrollHeight;log.dataset.seen='1'}}
+function closeChat(){clearInterval(chatPollId);chatPollId=null;openThreads()}
+
+async function sendMsg(){let inp=document.getElementById('chatInput');let v=inp.value.trim();if(!v)return;
+let r=await api('/api/buddies/threads/'+cThreadId+'/messages/',{content:v});
+if(r.ok){inp.value='';await loadThread()}else alert(r.data.content||r.data.error||"Message couldn't be sent")}
+
+function showReportMembers(){clearInterval(chatPollId);
+document.getElementById('rp1').style.display='block';document.getElementById('rp2').style.display='none';
+document.getElementById('rpMembers').innerHTML=cThreadMembers.filter(m=>!m.is_me).map(m=>'<div class="op" onclick="pickReportTarget(\''+m.id+'\')">'+m.first_name+'</div>').join('')||'<p class="sub">No one else in this chat yet.</p>';
+show('reportScreen')}
+function pickReportTarget(id){cReportTarget=id;document.getElementById('rp1').style.display='none';document.getElementById('rp2').style.display='block'}
+function cancelReport(){show('chatScreen');chatPollId=setInterval(loadThread,4000)}
+async function submitReport(reason){let r=await api('/api/buddies/threads/'+cThreadId+'/report/',{reported_user_id:cReportTarget,reason});
+alert(r.ok?r.data.message:(r.data.error||'Could not submit report'));openThread(cThreadId)}
+
+initLogin();
+if('serviceWorker' in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('/sw.js').catch(()=>{}))}
+</script>
+</body>
+</html>
