@@ -179,7 +179,9 @@ class VerifiedStay(models.Model):
             ("restaurant", "Restaurant"),
         ],
     )
-    price_range = models.CharField(max_length=30, blank=True)
+    # 60, not 30: this is free text like "Rs 1,500-3,000/night incl. meals", which
+    # already overflowed 30. SQLite ignores max_length so it only surfaced on Postgres.
+    price_range = models.CharField(max_length=60, blank=True)
     verification_note = models.TextField(blank=True)  # "Owner is a woman, has hosted solo travelers"
     contact = models.CharField(max_length=50, blank=True)
 
