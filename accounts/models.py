@@ -84,6 +84,15 @@ class InviteCode(models.Model):
         status = f"used by {self.used_by}" if self.used_by else "available"
         return f"{self.code} ({status})"
 
+    def save(self, *args, **kwargs):
+        # Signup upper-cases whatever the user types before looking the code up, but
+        # nothing forced the stored value to match: a code typed into Django admin as
+        # "preeti1" was saved lowercase and could then never be redeemed. Normalise
+        # here so admin-created and API-generated codes behave identically.
+        if self.code:
+            self.code = self.code.strip().upper()
+        super().save(*args, **kwargs)
+
     @classmethod
     def generate_code(cls):
         """Generate a unique 8-char uppercase code."""

@@ -6,7 +6,12 @@ from rest_framework.authtoken.models import Token
 from django.contrib.auth import login
 from django.utils import timezone
 from .models import User, InviteCode, TravelerProfile
-from .serializers import InviteVerifySerializer, SignupSerializer, ProfileSetupSerializer, TravelerProfileSerializer
+from .serializers import InviteVerifySerializer, SignupSerializer, ProfileSetupSerializer, TravelerProfileSerializer, MyInviteCodeSerializer
+
+# How many friends an ordinary woman can invite herself. The founder/admin account
+# (is_staff/is_superuser) is exempt — someone has to be able to bootstrap the network
+# before anyone else has codes to hand out.
+MAX_SELF_INVITES = 2
 
 @api_view(["POST"])
 @permission_classes([AllowAny])
@@ -71,3 +76,21 @@ def my_profile(request):
         return Response(TravelerProfileSerializer(request.user.profile).data)
     except TravelerProfile.DoesNotExist:
         return Response({"error": "Profile not set up yet"}, status=404)
+
+@api_view(["GET"])
+@permission_classes([IsAuthenticated])
+def my_invites(request):
+    codes = InviteCode.objects.filter(created_by=request.user).order_by("-created_at")
+    is_unlimited = request.user.is_staff or request.user.is_superuser
+    remaining = None if is_unlimited else max(0, MAX_SELF_INVITES - codes.count())
+    return Response({"codes": MyInviteCodeSerializer(codes, many=True).data, "remaining": remaining, "max": None if is_unlimited else MAX_SELF_INVITES})
+
+@api_view(["POST"])
+@permission_classes([IsAuthenticated])
+def generate_invite(request):
+    if not (request.user.is_staff or request.user.is_superuser):
+        used = InviteCode.objects.filter(created_by=request.user).count()
+        if used >= MAX_SELF_INVITES:
+            return Response({"error": f"You've used all {MAX_SELF_INVITES} of your invites."}, status=400)
+    invite = InviteCode.objects.create(code=InviteCode.generate_code(), created_by=request.user)
+    return Response(MyInviteCodeSerializer(invite).data, status=201)

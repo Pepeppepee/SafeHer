@@ -187,7 +187,10 @@ body[data-theme="cozy"]{--a:#D89638;--ad:#8B6914;--al:#FBEEDA}
 <h1 id="mG">How do you want to feel today?</h1>
 <p class="lb" id="mT" style="margin-bottom:0"></p>
 </div>
+<div style="display:flex;gap:8px">
+<button class="iconbtn" onclick="show('inviteScreen');loadInvites()" title="Invite friends">💌</button>
 <button class="iconbtn" id="buddyNavBtn" onclick="openThreads()" title="My buddies">👭<span class="dot"></span></button>
+</div>
 </div>
 <div id="mBadge"></div>
 <div class="dots" id="mDots"><span id="d1"></span><span id="d2"></span><span id="d3"></span></div>
@@ -314,6 +317,16 @@ body[data-theme="cozy"]{--a:#D89638;--ad:#8B6914;--al:#FBEEDA}
 <button class="iconbtn" onclick="showMood()">✕</button>
 </div>
 <div id="tList"></div>
+</div>
+
+<div class="screen" id="inviteScreen">
+<div class="navrow" style="margin-bottom:10px">
+<h1 style="margin-bottom:0">Invite friends 💌</h1>
+<button class="iconbtn" onclick="showMood()">✕</button>
+</div>
+<p class="sub" id="inviteSub">This app is invite-only, by design — it keeps the community small and trusted.</p>
+<button class="btn" id="genInviteBtn" onclick="doGenerateInvite()">Generate a new code</button>
+<div style="margin-top:20px" id="inviteList"></div>
 </div>
 
 <div class="screen" id="chatScreen">
@@ -509,6 +522,27 @@ return '<div class="tlist" onclick="openThread(\''+t.id+'\')"><div class="tn">'+
 show('threadsScreen')}
 
 async function openThread(id){if(!id)return;cThreadId=id;clearInterval(chatPollId);await loadThread();show('chatScreen');chatPollId=setInterval(loadThread,4000)}
+
+/* ---- invite a friend ---- */
+async function loadInvites(){let r=await api('/api/accounts/invites/');if(!r.ok)return;
+let unlimited=r.data.max===null;
+document.getElementById('inviteSub').textContent=unlimited
+  ?"This app is invite-only, by design — it keeps the community small and trusted. You have unlimited invites."
+  :`This app is invite-only, by design — it keeps the community small and trusted. You have ${r.data.remaining} of ${r.data.max} invites left.`;
+document.getElementById('genInviteBtn').disabled=!unlimited&&r.data.remaining<=0;
+let list=document.getElementById('inviteList');
+list.innerHTML=r.data.codes.length?r.data.codes.map(c=>{
+  let status=c.used_by_name?('✓ used by '+c.used_by_name):'<span style="text-decoration:underline;cursor:pointer" onclick="copyInvite(\''+c.code+'\',this)">tap to copy</span>';
+  return '<div class="tlist" style="cursor:default"><div class="tn" style="letter-spacing:1px;font-family:monospace">'+c.code+'</div><div class="ta">'+status+'</div></div>'
+}).join(''):'<div class="empty">💌<br><br>No codes yet — generate one below and send it to a friend.</div>'}
+
+async function doGenerateInvite(){let r=await api('/api/accounts/invites/generate/',{});
+if(r.ok){await loadInvites();burst(document.getElementById('genInviteBtn'))}
+else alert(r.data.error||"Couldn't generate a code")}
+
+function copyInvite(code,el){
+if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(code)}
+let old=el.textContent;el.textContent='copied ✓';setTimeout(()=>el.textContent=old,1500)}
 async function loadThread(){let r=await api('/api/buddies/threads/'+cThreadId+'/');if(!r.ok)return;renderChat(r.data)}
 function renderChat(d){cThreadMembers=d.members;
 document.getElementById('chN').textContent=d.experience_name;

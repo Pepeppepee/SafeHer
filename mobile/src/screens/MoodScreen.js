@@ -44,10 +44,15 @@ export default function MoodScreen({ navigation }) {
         <View style={{ flex: 1 }}>
           <Text style={styles.title}>Hey {user?.first_name}, how do you want to feel today?</Text>
         </View>
-        <TouchableOpacity style={styles.navIcon} onPress={() => navigation.navigate("Threads")}>
-          <Text style={{ fontSize: 18 }}>👭</Text>
-          {hasThreads && <View style={styles.dot} />}
-        </TouchableOpacity>
+        <View style={{ flexDirection: "row", gap: 8 }}>
+          <TouchableOpacity style={styles.navIcon} onPress={() => navigation.navigate("Invites")}>
+            <Text style={{ fontSize: 18 }}>💌</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.navIcon} onPress={() => navigation.navigate("Threads")}>
+            <Text style={{ fontSize: 18 }}>👭</Text>
+            {hasThreads && <View style={styles.dot} />}
+          </TouchableOpacity>
+        </View>
       </View>
       {profile ? (
         <View style={styles.badge}>

@@ -17,6 +17,7 @@ import GoScreen from "./src/screens/GoScreen";
 import ThreadsScreen from "./src/screens/ThreadsScreen";
 import ChatScreen from "./src/screens/ChatScreen";
 import ReportScreen from "./src/screens/ReportScreen";
+import InvitesScreen from "./src/screens/InvitesScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -38,6 +39,7 @@ export default function App() {
           <Stack.Screen name="Threads" component={ThreadsScreen} />
           <Stack.Screen name="Chat" component={ChatScreen} />
           <Stack.Screen name="Report" component={ReportScreen} options={{ presentation: "modal" }} />
+          <Stack.Screen name="Invites" component={InvitesScreen} options={{ presentation: "modal" }} />
         </Stack.Navigator>
         <StatusBar style="dark" />
       </NavigationContainer>

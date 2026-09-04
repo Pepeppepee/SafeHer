@@ -25,3 +25,12 @@ class TravelerProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = TravelerProfile
         fields = ["comfort_tier", "anxiety_points", "interest_scores", "trips_completed", "personality_label"]
+
+class MyInviteCodeSerializer(serializers.ModelSerializer):
+    used_by_name = serializers.SerializerMethodField()
+    class Meta:
+        model = InviteCode
+        fields = ["code", "is_active", "used_by_name", "created_at"]
+
+    def get_used_by_name(self, obj):
+        return obj.used_by.first_name if obj.used_by_id else None
